@@ -3,7 +3,7 @@ from telegram.ext import Application, MessageHandler, CommandHandler, ContextTyp
 
 TOKEN = "YAHAN_APNA_BOT_TOKEN_DALE"
 
-QR = "1000057338.jpg"
+QR = "IMG-20260714-WA0001.jpg"
 
 HELP = """
 🎮 Welcome to Ludo Champions Bot
