@@ -1,7 +1,7 @@
 from telegram import Update
 from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
 
-TOKEN = "YAHAN_APNA_BOT_TOKEN_DALE"
+TOKEN = "8306621194:AAGnXBAZ0Yx9iqqbRtFoGN0mipDAeB7TAfI"
 
 QR = "IMG-20260714-WA0001.jpg"
 
