@@ -1,5 +1,11 @@
 from telegram import Update
-from telegram.ext import Application, MessageHandler, CommandHandler, ContextTypes, filters
+from telegram.ext import (
+    Application,
+    CommandHandler,
+    MessageHandler,
+    ContextTypes,
+    filters,
+)
 
 TOKEN = "8306621194:AAGnXBAZ0Yx9iqqbRtFoGN0mipDAeB7TAfI"
 
@@ -27,36 +33,47 @@ async def help_cmd(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def welcome(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for user in update.message.new_chat_members:
         await update.message.reply_text(
-            f"🎉 Welcome {user.first_name}!\n"
+            f"🎉 Welcome {user.first_name}!\n\n"
             "🏆 Welcome to Ludo Champions.\n"
             "Type Help to see all commands."
         )
 
 async def reply(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    if not update.message or not update.message.text:
+        return
+
     text = update.message.text.lower()
 
-    if any(x in text for x in ["deposit", "qr", "pay", "payment", "upi"]):
-        await update.message.reply_photo(
-            photo=open(QR, "rb"),
-            caption="💰 Scan QR and send payment screenshot."
-        )
+    if any(word in text for word in ["deposit", "qr", "pay", "payment", "upi"]):
+        with open(QR, "rb") as photo:
+            await update.message.reply_photo(
+                photo=photo,
+                caption="💰 Scan QR and send payment screenshot."
+            )
 
     elif "withdraw" in text:
-        await update.message.reply_text("💸 Withdrawal Admin:\n@Payment_hub9")
+        await update.message.reply_text(
+            "💸 Withdrawal Admin:\n@Payment_hub9"
+        )
 
     elif "support" in text:
-        await update.message.reply_text("👨‍💼 Support:\n@Ludo_Champions9")
+        await update.message.reply_text(
+            "👨‍💼 Support:\n@Ludo_Champions9"
+        )
 
     elif "help" in text:
         await update.message.reply_text(HELP)
 
-app = Application.builder().token(TOKEN).build()
+def main():
+    app = Application.builder().token(TOKEN).build()
 
-app.add_handler(CommandHandler("start", start))
-app.add_handler(CommandHandler("help", help_cmd))
+    app.add_handler(CommandHandler("start", start))
+    app.add_handler(CommandHandler("help", help_cmd))
+    app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
+    app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, reply))
 
-app.add_handler(MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome))
-app.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, reply))
+    print("Bot Started...")
+    app.run_polling()
 
-print("Bot Started...")
-app.run_polling()
+if __name__ == "__main__":
+    main()
